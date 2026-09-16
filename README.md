@@ -1,32 +1,17 @@
-# React + TypeScript + Vite
+# Key Decisions
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Using opacity and psuedo elements instead of animating colour change
 
-Currently, two official plugins are available:
+Opacity is compositor only and skip the layout and paint step in the browsers renderer, it's smoother more scalable, especially noticable on lower end devices.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Using the --travel CSS function and translate instead of absolute
 
-## React Compiler
+Same story with Opacity, with the addition that the --travel function calculates how much distance it can move, so if width, height, or padding of the container changes, the translate css property will not break.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## using fireEvent on some vitest tests instead of userEvent
 
-## Expanding the Oxlint configuration
+Combining useFakeTimers with userEvent causes timeouts, using vitest to test the 2000ms accurately is still good to have so testing this in vitest still with fireEvent is worthwhile, userEvent would simulate the actual user interaction better than fireEvent though and would be preferable.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Duplicated tests in playwright
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+The auto revert at 2000ms, and clicking off before 2000ms cancels the pending revert are duplicated tests for this reason, playwright will simulate a real browser better, filling that small gap created by using fireEvent in vitest.

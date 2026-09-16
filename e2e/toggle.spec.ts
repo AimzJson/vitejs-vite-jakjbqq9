@@ -39,6 +39,20 @@ test.describe("Toggle", () => {
     await expect(el).not.toBeChecked();
   });
 
+  test("clicking off before 2000ms cancels the pending revert", async ({
+    page,
+  }) => {
+    await page.clock.install();
+    await page.goto("/");
+
+    const el = page.getByRole("switch", { name: /toggle active state/i });
+    await el.click();
+    await el.click();
+
+    await page.clock.fastForward(2000);
+    await expect(el).not.toBeChecked();
+  });
+
   test("keyboard activation toggles state", async ({ page }) => {
     await page.goto("/");
     const el = page.getByRole("switch", { name: /toggle active state/i });
