@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import './Toggle.css';
+import { useEffect, useState } from "react";
+import "./Toggle.css";
 
 export function Toggle() {
   const [active, setActive] = useState(false);
@@ -11,15 +11,16 @@ export function Toggle() {
   }, [active]);
 
   return (
-    <button
-      className={`container ${active ? 'container--active' : ''}`}
-      onClick={() => setActive((a) => !a)}
-      role="switch"
-      aria-checked={active}
-      aria-label="toggle active state"
-    >
-      <div className={`inner ${active ? 'inner--active' : ''}`} />
-    </button>
+    <label className={`container ${active ? "container--active" : ""}`}>
+      <input
+        type="checkbox"
+        role="switch"
+        checked={active}
+        onChange={() => setActive((a) => !a)}
+        aria-label="toggle active state"
+      />
+      <div className={`inner ${active ? "inner--active" : ""}`} />
+    </label>
   );
 }
 

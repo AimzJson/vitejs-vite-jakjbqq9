@@ -33,10 +33,10 @@ test.describe("Toggle", () => {
 
     const el = page.getByRole("switch", { name: /toggle active state/i });
     await el.click();
-    await expect(el).toHaveAttribute("aria-checked", "true");
+    await expect(el).toBeChecked();
 
     await page.clock.fastForward(2000);
-    await expect(el).toHaveAttribute("aria-checked", "false");
+    await expect(el).not.toBeChecked();
   });
 
   test("keyboard activation toggles state", async ({ page }) => {
@@ -44,9 +44,9 @@ test.describe("Toggle", () => {
     const el = page.getByRole("switch", { name: /toggle active state/i });
 
     await el.focus();
-    await page.keyboard.press("Enter");
+    await page.keyboard.press("Space");
 
-    await expect(el).toHaveAttribute("aria-checked", "true");
+    await expect(el).toBeChecked();
   });
 
   test("respects prefers-reduced-motion", async ({ browser }) => {

@@ -1,6 +1,4 @@
 .container {
-  appearance: none;
-  font: inherit;
   cursor: pointer;
   width: var(--container-size);
   height: var(--container-size);
@@ -12,8 +10,21 @@
   padding: var(--padding);
 }
 
+.container:has(input:focus-visible) {
+  outline: 2px solid #8f97f3;
+  outline-offset: 2px;
+}
+
+.container input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .container::before {
-  content: '';
+  content: "";
   position: absolute;
   background: rgba(143, 151, 243, 0.04);
   inset: 0;
@@ -38,7 +49,7 @@
 }
 
 .inner::before {
-  content: '';
+  content: "";
   position: absolute;
   background-color: #8f97f3;
   inset: 0;
