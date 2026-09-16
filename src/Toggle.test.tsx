@@ -23,7 +23,7 @@ describe("Toggle", () => {
       await user.click(el);
 
       expect(el).toBeChecked();
-      expect(el).toHaveClass("container--active");
+      expect(el.closest("label")).toHaveClass("container--active");
     });
   });
 
