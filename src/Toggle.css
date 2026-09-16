@@ -1,0 +1,56 @@
+.container {
+  appearance: none;
+  font: inherit;
+  cursor: pointer;
+  width: var(--container-size);
+  height: var(--container-size);
+  box-sizing: border-box;
+  position: absolute;
+  border-radius: 16px;
+  border: 1px solid #e4e4e4;
+  background: rgba(0, 0, 0, 0.02);
+  padding: var(--padding);
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  background: rgba(143, 151, 243, 0.04);
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+.container--active::before {
+  opacity: 1;
+}
+
+.inner {
+  width: var(--inner-size);
+  height: var(--inner-size);
+  position: absolute;
+  bottom: var(--padding);
+  left: var(--padding);
+  transition: transform 200ms ease-out;
+  border-radius: 8px;
+  background: #ececec;
+}
+
+.inner::before {
+  content: '';
+  position: absolute;
+  background-color: #8f97f3;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+.inner--active {
+  transform: translate(var(--travel), calc(var(--travel) * -1));
+}
+
+.inner--active::before {
+  opacity: 1;
+}
