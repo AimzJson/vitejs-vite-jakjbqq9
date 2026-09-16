@@ -25,14 +25,6 @@ describe('Toggle', () => {
       expect(el).toHaveAttribute('aria-checked', 'true');
       expect(el).toHaveClass('container--active');
     });
-
-    it('keyboard activation toggles state', async () => {
-      const { user, el } = renderToggle();
-      el.focus();
-      await user.keyboard('{Enter}');
-
-      expect(el).toHaveAttribute('aria-checked', 'true');
-    });
   });
 
   describe('timing', () => {

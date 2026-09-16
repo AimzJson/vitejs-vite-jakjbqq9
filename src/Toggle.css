@@ -54,3 +54,11 @@
 .inner--active::before {
   opacity: 1;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .inner,
+  .inner::before {
+    transition: none;
+  }
+}
