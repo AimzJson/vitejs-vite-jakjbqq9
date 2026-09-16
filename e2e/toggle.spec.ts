@@ -1,54 +1,70 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test";
 
-test.describe('Toggle', () => {
-  test('click moves the inner square to the top-right and reveals the purple overlay', async ({ page }) => {
-    await page.goto('/')
-    const el = page.getByRole('switch', { name: /toggle active state/i })
-    const containerBox = await el.boundingBox()
+test.describe("Toggle", () => {
+  test("click moves the inner square to the top-right and reveals the purple overlay", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const el = page.getByRole("switch", { name: /toggle active state/i });
+    const containerBox = await el.boundingBox();
 
-    await el.click()
+    await el.click();
 
-    const inner = page.locator('.inner')
-    const innerBox = await inner.boundingBox()
-    expect(innerBox!.x).toBeGreaterThan(containerBox!.x + containerBox!.width / 2)
-    expect(innerBox!.y).toBeLessThan(containerBox!.y + containerBox!.height / 2)
+    const inner = page.locator(".inner");
 
-    const beforeOpacity = await inner.evaluate(
-      (node) => getComputedStyle(node, '::before').opacity
-    )
-    expect(beforeOpacity).toBe('1')
-  })
+    await expect
+      .poll(() =>
+        inner.evaluate((node) => getComputedStyle(node, "::before").opacity),
+      )
+      .toBe("1");
 
-  test('auto-reverts at 2000ms', async ({ page }) => {
-    await page.clock.install()
-    await page.goto('/')
+    const innerBox = await inner.boundingBox();
+    expect(innerBox!.x).toBeGreaterThan(
+      containerBox!.x + containerBox!.width / 2,
+    );
+    expect(innerBox!.y).toBeLessThan(
+      containerBox!.y + containerBox!.height / 2,
+    );
+  });
 
-    const el = page.getByRole('switch', { name: /toggle active state/i })
-    await el.click()
-    await expect(el).toHaveAttribute('aria-checked', 'true')
+  test("auto-reverts at 2000ms", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
 
-    await page.clock.fastForward(2000)
-    await expect(el).toHaveAttribute('aria-checked', 'false')
-  })
+    const el = page.getByRole("switch", { name: /toggle active state/i });
+    await el.click();
+    await expect(el).toHaveAttribute("aria-checked", "true");
 
-  test('keyboard activation toggles state', async ({ page }) => {
-    await page.goto('/')
-    const el = page.getByRole('switch', { name: /toggle active state/i })
+    await page.clock.fastForward(2000);
+    await expect(el).toHaveAttribute("aria-checked", "false");
+  });
 
-    await el.focus()
-    await page.keyboard.press('Enter')
+  test("keyboard activation toggles state", async ({ page }) => {
+    await page.goto("/");
+    const el = page.getByRole("switch", { name: /toggle active state/i });
 
-    await expect(el).toHaveAttribute('aria-checked', 'true')
-  })
+    await el.focus();
+    await page.keyboard.press("Enter");
 
-  test('respects prefers-reduced-motion', async ({ browser }) => {
-    const page = await browser.newPage({ reducedMotion: 'reduce' })
-    await page.goto('/')
-    const el = page.getByRole('switch', { name: /toggle active state/i })
+    await expect(el).toHaveAttribute("aria-checked", "true");
+  });
 
-    await el.click()
-    await expect(page.locator('.inner')).toHaveCSS('transition-duration', '0s')
+  test("respects prefers-reduced-motion", async ({ browser }) => {
+    const page = await browser.newPage({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const el = page.getByRole("switch", { name: /toggle active state/i });
 
-    await page.close()
-  })
-})
+    await el.click();
+
+    await expect(page.locator(".inner")).toHaveCSS("transition-duration", "0s");
+
+    const beforeTransition = await page
+      .locator(".inner")
+      .evaluate(
+        (node) => getComputedStyle(node, "::before").transitionDuration,
+      );
+    expect(beforeTransition).toBe("0s");
+
+    await page.close();
+  });
+});
